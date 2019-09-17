@@ -20,13 +20,19 @@ $ yarn add tailwindcss-border-styles
 ```js
 // tailwind.config.js
 {
+  theme: {
+    borderStyles: {
+      styles: true, // defaults to false
+      colors: true, // defaults to false
+    }
+  }
   plugins: [
     require('tailwindcss-border-styles')(),
   ],
 }
 ```
 
-This plugin generates the following utilities:
+The following utilities are generated when `styles` is set to `true`:
 
 ```css
 .border-t-solid {
@@ -110,7 +116,27 @@ This plugin generates the following utilities:
 }
 ```
 
-as well as the responsive variants if you have `responsive` set on [`borderStyle`](https://github.com/tailwindcss/tailwindcss/blob/master/stubs/defaultConfig.stub.js#L435).
+The following utilities are generated when `colors` is set to `true` (based on your theme colors):
+
+```css
+.border-t-white {
+  border-top-color: #fff;
+}
+
+.border-r-white {
+  border-right-color: #fff;
+}
+
+.border-b-white {
+  border-bottom-color: #fff;
+}
+
+.border-l-white {
+  border-left-color: #fff;
+}
+```
+
+as well as the appropriate variants set on [`borderStyle`](https://github.com/tailwindcss/tailwindcss/blob/master/stubs/defaultConfig.stub.js#L435) & [`borderColor`](https://github.com/tailwindcss/tailwindcss/blob/master/stubs/defaultConfig.stub.js#L433).
 
 ## Testing
 

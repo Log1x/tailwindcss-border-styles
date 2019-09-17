@@ -5,16 +5,24 @@ const tailwindcss = require('tailwindcss');
 const defaultConfig = require('tailwindcss/defaultConfig');
 const borderStylesPlugin = require('./index.js');
 
-const generatePluginCss = (config, pluginOptions = {}) => {
+const generatePluginCss = (config) => {
   return postcss(
     tailwindcss(
       _.merge({
         theme: {
+          colors: {
+            white: '#fff',
+            gray: {
+              100: '#f7fafc',
+              500: '#a0aec0',
+              900: '#1a202c',
+            },
+          },
           screens: {
             sm: '640px',
           },
         },
-        corePlugins: (function() {
+        corePlugins: (() => {
           let disabledCorePlugins = {};
           Object.keys(defaultConfig.variants).forEach(corePlugin => {
             disabledCorePlugins[corePlugin] = false;
@@ -22,7 +30,7 @@ const generatePluginCss = (config, pluginOptions = {}) => {
           return disabledCorePlugins;
         })(),
         plugins: [
-          borderStylesPlugin(pluginOptions),
+          borderStylesPlugin(),
         ],
       }, config)
     )
@@ -39,8 +47,21 @@ expect.extend({
   toMatchCss: cssMatcher,
 });
 
-test('the plugin creates border side styles based on the default borderStyle variant', () => {
+test('the plugin does nothing by default', () => {
   return generatePluginCss().then(css => {
+    expect(css).toMatchCss(`
+    `);
+  });
+});
+
+test('the plugin creates border side styles based on the borderStyles `styles` boolean and default borderStyle variant', () => {
+  return generatePluginCss({
+    theme: {
+      borderStyles: {
+        styles: true,
+      }
+    }
+  }).then(css => {
     expect(css).toMatchCss(`
       .border-t-solid {
         border-top-style: solid;
@@ -201,6 +222,148 @@ test('the plugin creates border side styles based on the default borderStyle var
 
         .sm\\:border-l-none {
           border-left-style: none;
+        }
+      }
+    `);
+  });
+});
+
+test('the plugin creates border side colors based on the borderStyles `colors` boolean and default borderColor variant', () => {
+  return generatePluginCss({
+    theme: {
+      borderStyles: {
+        colors: true,
+      }
+    }
+  }).then(css => {
+    expect(css).toMatchCss(`
+      .border-t-white {
+        border-top-color: #fff;
+      }
+
+      .border-t-gray-100 {
+        border-top-color: #f7fafc;
+      }
+
+      .border-t-gray-500 {
+        border-top-color: #a0aec0;
+      }
+
+      .border-t-gray-900 {
+        border-top-color: #1a202c;
+      }
+
+      .border-r-white {
+        border-right-color: #fff;
+      }
+
+      .border-r-gray-100 {
+        border-right-color: #f7fafc;
+      }
+
+      .border-r-gray-500 {
+        border-right-color: #a0aec0;
+      }
+
+      .border-r-gray-900 {
+        border-right-color: #1a202c;
+      }
+
+      .border-b-white {
+        border-bottom-color: #fff;
+      }
+
+      .border-b-gray-100 {
+        border-bottom-color: #f7fafc;
+      }
+
+      .border-b-gray-500 {
+        border-bottom-color: #a0aec0;
+      }
+
+      .border-b-gray-900 {
+        border-bottom-color: #1a202c;
+      }
+
+      .border-l-white {
+        border-left-color: #fff;
+      }
+
+      .border-l-gray-100 {
+        border-left-color: #f7fafc;
+      }
+
+      .border-l-gray-500 {
+        border-left-color: #a0aec0;
+      }
+
+      .border-l-gray-900 {
+        border-left-color: #1a202c;
+      }
+
+      @media (min-width: 640px) {
+        .sm\\:border-t-white {
+          border-top-color: #fff;
+        }
+
+        .sm\\:border-t-gray-100 {
+          border-top-color: #f7fafc;
+        }
+
+        .sm\\:border-t-gray-500 {
+          border-top-color: #a0aec0;
+        }
+
+        .sm\\:border-t-gray-900 {
+          border-top-color: #1a202c;
+        }
+
+        .sm\\:border-r-white {
+          border-right-color: #fff;
+        }
+
+        .sm\\:border-r-gray-100 {
+          border-right-color: #f7fafc;
+        }
+
+        .sm\\:border-r-gray-500 {
+          border-right-color: #a0aec0;
+        }
+
+        .sm\\:border-r-gray-900 {
+          border-right-color: #1a202c;
+        }
+
+        .sm\\:border-b-white {
+          border-bottom-color: #fff;
+        }
+
+        .sm\\:border-b-gray-100 {
+          border-bottom-color: #f7fafc;
+        }
+
+        .sm\\:border-b-gray-500 {
+          border-bottom-color: #a0aec0;
+        }
+
+        .sm\\:border-b-gray-900 {
+          border-bottom-color: #1a202c;
+        }
+
+        .sm\\:border-l-white {
+          border-left-color: #fff;
+        }
+
+        .sm\\:border-l-gray-100 {
+          border-left-color: #f7fafc;
+        }
+
+        .sm\\:border-l-gray-500 {
+          border-left-color: #a0aec0;
+        }
+
+        .sm\\:border-l-gray-900 {
+          border-left-color: #1a202c;
         }
       }
     `);
