@@ -1,6 +1,6 @@
 {
   "name": "tailwindcss-border-styles",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Tailwind CSS plugin to generate individual border side style classes.",
   "author": "Brandon Nifong <brandon@tendency.me>",
   "license": "MIT",
